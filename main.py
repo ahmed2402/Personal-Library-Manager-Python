@@ -39,22 +39,33 @@ class BookCollection:
     def delete_book(self):
         book_title = input("Enter the title of the book to remove: ")
 
-        for book in self.book_list:
+        for book in self.booklist:
             if book["title"].lower() == book_title.lower():
-                self.book_list.remove(book)
+                self.booklist.remove(book)
                 self.save_to_file()
                 print("Book removed successfully!\n")
                 return
         print("Book not found!\n")     
 
     def find_book(self):
-        book_find = input("Enter the book to find : ")
+        search_type = input("Search by:\n1. Title\n2. Author\nEnter your choice: ")
+        search_text = input("Enter search term: ").lower()
+        found_books = [
+            book
+            for book in self.booklist
+            if search_text in book["title"].lower()
+            or search_text in book["author"].lower()
+        ]
 
-        for book in self.booklist:
-            if book["title"].lower() == book_find.lower():
-                print(book)
-            else:
-                print("book not found!")    
+        if found_books:
+            print("Matching Books:")
+            for index, book in enumerate(found_books, 1):
+                reading_status = "Read" if book["read"] else "Unread"
+                print(
+                    f"{index}. {book['title']} by {book['author']} ({book['year']}) - {book['genre']} - {reading_status}"
+                )
+        else:
+            print("No matching books found.\n")   
 
     def start_application(self):
         while True:
